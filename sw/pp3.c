@@ -41,6 +41,7 @@ char * PP_VERSION = "0.99";
 int verbose = 1,verify = 1,program = 1,sleep_time = 0;
 int devid_expected,devid_mask,baudRate,com,flash_size,page_size,chip_family,config_size;
 unsigned char file_image[70000],progmem[PROGMEM_LEN], config_bytes[CONFIG_LEN];
+unsigned char isE=0;
 
 //*********************************************************************************//
 //*********************************************************************************//
@@ -406,6 +407,7 @@ int setCPUtype(char* cpu)
 				if (strcmp("CF_P16F_B",read_algo_type)==0) chip_family = CF_P16F_B;
 				if (strcmp("CF_P16F_C",read_algo_type)==0) chip_family = CF_P16F_C;
 				if (strcmp("CF_P16F_D",read_algo_type)==0) chip_family = CF_P16F_D;
+				if (strcmp("CF_P16F_E",read_algo_type)==0) {chip_family = CF_P16F_C; isE=1;}
 				if (strcmp("CF_P18F_A",read_algo_type)==0) chip_family = CF_P18F_A;
 				if (strcmp("CF_P18F_B",read_algo_type)==0) chip_family = CF_P18F_B;
 				if (strcmp("CF_P18F_C",read_algo_type)==0) chip_family = CF_P18F_C;
@@ -732,6 +734,15 @@ int p16c_mass_erase (void)
     return 0;
     }
 
+int p16e_mass_erase (void)
+    {
+    if (verbose>2) flsprintf(stdout,"Mass erase\n");
+    putByte(0x47);
+    putByte(0x00);
+    getByte();
+    return 0;
+    }
+
 int p16c_read_page (unsigned char * data, int address, unsigned char num)
     {
     unsigned char i;
@@ -1007,6 +1018,7 @@ int main(int argc, char *argv[])
     int i,j,pages_performed,config,econfig;
     unsigned char * pm_point, * cm_point;
     unsigned char tdat[200];
+
     parseArgs(argc,argv);
     if (verbose>0) printf ("PP programmer, version %s\n",PP_VERSION);
     if (verbose>1) printf ("Opening serial port\n");
@@ -1172,7 +1184,7 @@ int main(int argc, char *argv[])
         if (program==1)
             {
             if ((chip_family==CF_P16F_A)|(chip_family==CF_P16F_B)|(chip_family==CF_P16F_D)) p16a_mass_erase();
-            if ((chip_family==CF_P16F_C)) p16c_mass_erase();
+            if ((chip_family==CF_P16F_C)) {if(isE) p16e_mass_erase(); else p16c_mass_erase();}
             if ((chip_family==CF_P16F_A)|(chip_family==CF_P16F_B)|(chip_family==CF_P16F_D)) p16a_rst_pointer();				//pointer reset is needed before every "big" operation
             if (verbose>0) printf ("Programming FLASH (%d B in %d pages)",flash_size,flash_size/page_size);
             fflush(stdout);
