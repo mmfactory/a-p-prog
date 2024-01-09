@@ -46,6 +46,7 @@ unsigned int isp_read_16_msb (void);
 unsigned char p16c_enter_progmode (void);
 void p16c_set_pc (unsigned long pc);
 void p16c_bulk_erase (void);
+void p16e_bulk_erase (void);
 void p16c_load_nvm (unsigned char inc, unsigned int data);
 unsigned int p16c_read_data_nvm (unsigned char inc);
 void p16c_begin_prog (unsigned char cfg_bit);
@@ -100,10 +101,11 @@ int main (void)
   UCSR0B |= _BV(TXEN0);
   UCSR0B |= _BV(RXEN0);
   
-  ISP_CLK_D_0
-  ISP_DAT_D_0
-  ISP_DAT_0
-  ISP_CLK_0
+// don't set ISP_CLK and ISP_DAT as output until command has been received
+//  ISP_CLK_D_0
+//  ISP_DAT_D_0
+//  ISP_DAT_0
+//  ISP_CLK_0
   ISP_MCLR_D_0
   ISP_MCLR_1
   rx_state = 0;
@@ -172,6 +174,11 @@ int main (void)
       rx_state = rx_state_machine (rx_state,rx);
       if (rx_state==3)
         {
+          ISP_CLK_D_0
+	  ISP_DAT_D_0
+	  ISP_DAT_0
+	  ISP_CLK_0
+
         if (rx_message[0]==0x01)
           {
           enter_progmode();
@@ -375,7 +382,22 @@ int main (void)
           p18q_isp_write_pgm (flash_buffer, addr, rx_message[2]/2);
           usart_tx_b (0xC6);
           rx_state = 0;
-          }        
+          }   
+        if (rx_message[0]==0x47)
+          {
+          p16e_bulk_erase ();
+          usart_tx_b (0xC7);
+          rx_state = 0;
+          }         
+        if (rx_message[0]==0x48)
+          {
+          p16x_bulk_erase ();
+          usart_tx_b (0xC8);
+          rx_state = 0;
+          }         
+          
+          ISP_CLK_D_I
+	  ISP_DAT_D_I
         }
       }      
     }
@@ -885,6 +907,7 @@ _delay_ms(30);
 ISP_MCLR_0
 _delay_ms(30);
 ISP_MCLR_1
+_delay_ms(30);
 }
 
 //***********************************************************************************//
@@ -912,6 +935,26 @@ void p16c_bulk_erase (void)
 {
   isp_send_8_msb(0x18);
   _delay_ms(100);
+}
+
+void p16e_bulk_erase (void)
+{
+// erase flash_memory user_id configuration_memory
+  isp_send_8_msb(0x18);
+  _delay_us(2);
+//  isp_send_24_msb(0x1C); // flash_memory is not erased
+  isp_send_24_msb(0x0E);
+  _delay_ms(100);
+}
+
+void p16x_bulk_erase (void)
+{
+// erase flash_memory user_id configuration_memory
+  isp_send_8_msb(0x18);
+  _delay_us(2);
+  isp_send_24_msb(0x1C);
+  _delay_ms(100);
+//  p16c_begin_prog(0);
 }
 
 void p16c_load_nvm (unsigned int data, unsigned char inc)
@@ -1065,7 +1108,3 @@ usart_tx_b('x');
   usart_tx_hexa_8b(value&0xFF);
   usart_tx_b(' ');
 }
-
-
-
-
