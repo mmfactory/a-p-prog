@@ -95,3 +95,8 @@ there is external database parser, all MCU parameter are here in plain text
 - version 0.99
 - PIC18FxxQ10 support added, now 439 devices in total
 
+
+2024-01-10
+- ISP_CLK and ISP_DAT stay now as inputs except during programming
+- added support for 16f180XX and 16f152XX
+

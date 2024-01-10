@@ -4,6 +4,13 @@ For [Micro progmeter](https://github.com/jaromir-sukuba/micro_progmeter) project
 Together with SDCC compiler this serves as completely open-source basis for many 8-bit PIC devices.
 
 The current project status: Programmer working, sources need cleanup, perhaps rework of its structure (it grew out of its simple structure).
+
+## changes from the original version by mmfactory
+
+ISP_CLK and ISP_DAT pins of the programmer stay now as inputs except during programming so that corresponding PIC pins can be used even while the programmer is connected.
+
+Added support for 16f180XX and 16f152XX (tested 16f18015 and 16f15214 only).
+
 # List of supported devices is at the end of this page.
 
 
@@ -102,6 +109,36 @@ Obviously, there is more supported than verified (tested) devices. I tried to te
 
 **DEVICE**|**TESTED**
 :-----:|:-----:
+pic16f18013| 
+pic16f18014| 
+pic16f18015|YES
+pic16f18023| 
+pic16f18024| 
+pic16f18025| 
+pic16f18026| 
+pic16f18044| 
+pic16f18045| 
+pic16f18046| 
+pic16f18054| 
+pic16f18055| 
+pic16f18056| 
+pic16f18074| 
+pic16f18075| 
+pic16f18076| 
+pic16f15213| 
+pic16f15214|YES
+pic16f15223| 
+pic16f15224| 
+pic16f15243| 
+pic16f15244| 
+pic16f15254| 
+pic16f15274| 
+pic16f15225| 
+pic16f15245| 
+pic16f15255| 
+pic16f15275| 
+pic16f15256| 
+pic16f15276| 
 PIC12F1501|YES
 PIC12F1571| 
 PIC12F1572|YES
@@ -113,7 +150,7 @@ PIC12LF1552|YES
 PIC12LF1571| 
 PIC12LF1572| 
 PIC12LF1612| 
-PIC12LF1822| 
+PIC12LF1822|YES
 PIC12LF1840|YES
 PIC16F1454| 
 PIC16F1455|YES
