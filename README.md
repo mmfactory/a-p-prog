@@ -5,7 +5,7 @@ Together with SDCC compiler this serves as completely open-source basis for many
 
 The current project status: Programmer working, sources need cleanup, perhaps rework of its structure (it grew out of its simple structure).
 
-## changes from the original version by mmfactory
+## changes from the original version
 
 ISP_CLK and ISP_DAT pins of the programmer stay now as inputs except during programming so that corresponding PIC pins can be used even while the programmer is connected.
 
