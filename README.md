@@ -53,27 +53,29 @@ The firmware should be able to compile outside Arduino IDE as it doesn't contain
 
 ## Software
 
+Note: pp3 is the original version by jaromir-sukuba.
+
 When running under Linux, download source from this repository and run
 
-`gcc -Wall pp3.c -o pp3`
+`gcc -Wall pp4.c -o pp4`
 
-This should build executable pp3. When working under windows, you can download compiled binary from this repository. Alternatively, you can build it from source - install minGW and run
+This should build executable pp4. When working under windows, you can download compiled binary from this repository. Alternatively, you can build it from source - install minGW and run
 
-`gcc -Wall pp3.c -o pp3`
+`gcc -Wall pp4.c -o pp4`
 
-ie. the same procedure as on Linux. This should result in silent build with pp3.exe executable created.
+ie. the same procedure as on Linux. This should result in silent build with pp4.exe executable created.
 
 Running the executable with no parameters should only bring banner "pp programmer". Though running with basic set of parameters
 
-`./pp3 -c /dev/ttyACM0 -t 16f1829 file.hex`
+`./pp4 -c /dev/ttyACM0 -t 16f1829 file.hex`
 
 under Linux, where -c parameter denotes port to be accessed, -t parameter defines PIC to be programmed and last parameter is hex file to be downloaded; or
 
-`pp3.exe -c COM30 -t 16f1829 file.hex`
+`pp4.exe -c COM30 -t 16f1829 file.hex`
 
 under Windows should program the target PIC; with expected result:
 
-	$ ./pp3 -c /dev/ttyACM0 -t 16f1829 file.hex
+	$ ./pp4 -c /dev/ttyACM0 -t 16f1829 file.hex
     Opening serial port
     Device ID 0x27E4
     Programming FLASH (16384 B in 256 pages)
@@ -87,20 +89,20 @@ under Windows should program the target PIC; with expected result:
 
 If you are running the hardware on generic arduino board or you forget to open jumper JP2 after loading firmware on dedicated hardware, you may need to insert waiting time after opening serial port and before communication - to ensure Arduino bootloader times out after opening serial port and takes control to programmer firmware. It should look like this
 
-`pp3.exe -c COM30 -s 1700 -t 16f1829 file.bin`
+`pp4.exe -c COM30 -s 1700 -t 16f1829 file.bin`
 
 where number after -s switch defines the number of miliseconds to wait after opening the serial port.
 
 You may omit the actual programming using -p switch or verification using -n switch, when using both the programmer only checks target device signature and exits.
 
-`$ ./pp3 -c /dev/ttyACM0 -p -n -t 16f1829 file.bin`
+`$ ./pp4 -c /dev/ttyACM0 -p -n -t 16f1829 file.bin`
 
     Opening serial port
     Device ID 0x27E4
     Releasing MCLR
 
 you can add some debug output info using -v parameter, ranging from -v 1 to -v 4. It may be suitable for debugging, -v 4 prints out all byte transaction on serial port, so be prepared for huge output.
-There is database file pp3_devices.dat which hold information of supported PIC types. For now, the filename is fixed in code can't be changed and file has to be in the same directory as pp executable..
+There is database file pp4_devices.dat which hold information of supported PIC types. For now, the filename is fixed in code can't be changed and file has to be in the same directory as pp executable..
 
 
 ## Supported devices
